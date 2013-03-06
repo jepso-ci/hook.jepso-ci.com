@@ -14,7 +14,9 @@
     "browserify": "~2.4",
     "request": "~2.14",
     "jepso-ci-config": "~2.0",
-    "q": "~0.9"
+    "q": "~0.9",
+    "simple-queue-service": "~1.0.1",
+    "aws-sdk": "0.9.5-pre.6"
   },
   "domains": [
     "hook.jepso-ci.com"

@@ -1,0 +1,6 @@
+{
+  "access": "AWS-ACCESS-KEY",
+  "secret": "AWS-SECRET",
+  "queue": "jepso-ci-builds",
+  "repos-table": "jepso-ci-repos"
+}
