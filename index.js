@@ -2,11 +2,26 @@ var join = require('path').join;
 var Q = require('q');
 var getHead = Q.nfbind(require('request').head);
 var loadConfig = require('jepso-ci-config').loadRemote;
+var queueBuild = require('./lib/queue-build');
 
 var express = require('express');
 var app = express();
 var server = module.exports = require('http').createServer(app);
 var io = require('socket.io').listen(server, {'log level': 1});
+
+function checkConfig(user, repo, tag) {
+  return loadConfig(user, repo, tag)
+    .then(function (config) {
+      var url = 'https://raw.github.com/' + user + '/' + repo + '/' + tag + config.url;
+      return getHead(url)
+        .spread(function (head) {
+          if (head.statusCode != 200)
+            throw new Error('Could not load ' + JSON.stringify(url) + ' server responded with status code ' + head.statusCode + 
+              '.  Check you\'ve correctly named your test html file.');
+          return config;
+        })
+    })
+}
 
 app.use(require('./lib/bundle-client').serve);
 app.use(express.favicon());
@@ -24,39 +39,41 @@ app.post('/', function (req, res, next) {
   var user = payload.repository.owner.name;
   var repo = payload.repository.name;
   var tag = payload.after;
-  hook(user, repo, tag, res, next);
+  loadConfig(user, repo, tag)
+    .then(function () {
+      return queueBuild(user, repo, tag);
+    })
+    .done(function () {
+      emit('queued', {user: user, repo: repo, tag: tag});
+      res.send('"build queued"');
+    }, function (err) {
+      console.error(err.stack || err.message || err);
+      emit('err', {user: user, repo: repo, tag: tag, err: err.message || err.toString()});
+      res.send(500, JSON.stringify(err.message || err));
+    });
 });
 
-app.post('/:user/:repo/:tag', function (req, res, next) {
+app.post('/enqueue/:user/:repo/:tag', function (req, res, next) {
   var user = req.params.user;
   var repo = req.params.repo;
   var tag = req.params.tag;
-  hook(user, repo, tag, res, next);
-});
-app.post('/test/:user/:repo/:tag', function (req, res, next) {
-  var user = req.params.user;
-  var repo = req.params.repo;
-  var tag = req.params.tag;
-  loadConfig(user, repo, tag)
+  checkConfig(user, repo, tag)
     .then(function (config) {
-      var url = 'https://raw.github.com/' + user + '/' + repo + '/' + tag + config.url;
-      return getHead(url)
-        .spread(function (head) {
-          if (head.statusCode != 200)
-            throw new Error('Could not load ' + JSON.stringify(url) + ' server responded with status code ' + head.statusCode + 
-              '.  Check you\'ve correctly named your test html file.');
-          res.json({
-            message: 'passed',
-            commit: {
-              user: user,
-              repo: repo,
-              tag: tag
-            },
-            config: config
-          });
-        })
+      return queueBuild(user, repo, tag).thenResolve(config);
     })
-    .fail(function (err) {
+    .done(function (config) {
+      emit('queued', {user: user, repo: repo, tag: tag});
+      res.json({
+        message: 'passed',
+        commit: {
+          user: user,
+          repo: repo,
+          tag: tag
+        },
+        config: config
+      });
+    }, function (err) {
+      emit('err', {user: user, repo: repo, tag: tag, err: err.message || err.toString()});
       res.json({
         message: 'error',
         commit: {
@@ -66,13 +83,39 @@ app.post('/test/:user/:repo/:tag', function (req, res, next) {
         },
         error: err.message || err.toString()
       });
-    })
-    .done(null, next);
+    });
+});
+app.post('/test/:user/:repo/:tag', function (req, res, next) {
+  var user = req.params.user;
+  var repo = req.params.repo;
+  var tag = req.params.tag;
+  checkConfig(user, repo, tag)
+    .done(function (config) {
+      res.json({
+        message: 'passed',
+        commit: {
+          user: user,
+          repo: repo,
+          tag: tag
+        },
+        config: config
+      });
+    }, function (err) {
+      res.json({
+        message: 'error',
+        commit: {
+          user: user,
+          repo: repo,
+          tag: tag
+        },
+        error: err.message || err.toString()
+      });
+    });
 });
 
 
 function hook(user, repo, tag, res, next) {
-  loadConfig(user, repo, tag)
+  checkConfig(user, repo, tag)
     .then(function () {
       //todo: Queue Build Here
     })
