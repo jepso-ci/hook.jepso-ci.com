@@ -5,7 +5,9 @@ body, html {
   height: 100%;
 }
 .content {
-  padding: 100px;
+  padding: 50px;
+  max-width: 950px;
+  margin: auto;
 }
 #color-bar {
   background: #c00080;

@@ -24,7 +24,7 @@ function checkConfig(user, repo, tag) {
 }
 
 app.use(require('./lib/bundle-client').serve);
-app.use(express.favicon());
+app.use(express.favicon(join(__dirname, 'public', 'favicon.ico')));
 app.use(express.static(join(__dirname, 'public')));
 app.use(express.bodyParser());
 
