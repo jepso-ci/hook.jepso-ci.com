@@ -1,0 +1,20 @@
+{
+  "name": "hook.jepso-ci.com",
+  "version": "0.0.0",
+  "description": "The GitHub hook for jepso-ci job creation",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R spec",
+    "start": "node server.js"
+  },
+  "private": true,
+  "license": "MIT",
+  "dependencies": {
+    "express": "~3.1.0",
+    "socket.io": "~0.9.13",
+    "browserify": "~2.4.2",
+    "request": "~2.14.0",
+    "jepso-ci-config": "~2.0.0",
+    "q": "~0.9.0"
+  }
+}

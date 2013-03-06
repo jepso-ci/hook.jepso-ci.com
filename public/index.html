@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>JEPSO CI HOOK</title>
+    <link href="/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="color-bar"></div>
+    <div class="content">
+      <img src="/logo.svg" width="100px" height="100px" align="right"/>
+      <h1>JEPSO-CI Hook</h1>
+      <p>You can set up GitHub with this url as a post-receive hook and JEPSO-CI will automatically re-test your library every time you push changes. To do this, go to your GitHub page and click on settings, you then need to add <code>https://hook.jepso-ci.com</code>.  It should then look like:</p>
+      <img src="/hook-setup.png" width="944px" height="419" style="border: #C00080; border-style: solid;" />
+      <h2>Manually Trigger Tests</h2>
+      <p>To test a repo; just put the User, Repo and Tag you wish tested in these fields.</p>
+      <form class="form-inline">
+        <input id="user-input" type="text" placeholder="User (e.g. jepso-ci-examples)" />
+        <input id="repo-input" type="text" placeholder="Repo (e.g. minimum)" />
+        <input id="tag-input" type="text" placeholder="Tag (default: master)" />
+        <button id="do-test-config" class="btn">Test Configuration</button>
+        <button id="do-queue-test" class="btn">Queue Test</button>
+      </form>
+      <div id="test-result"></div>
+      <h2>Pushed Repos</h2>
+      <p>This table will be populated with repositories being pushed as they arrive in real time.</p>
+      <table class="table table-bordered table-hover table-condensed table-striped" style="width: 800px">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Repo</th>
+            <th>Tag</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="stream">
+          <tr><td colspan="4">No repos pushed yet...</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+  </body>
+</html>
