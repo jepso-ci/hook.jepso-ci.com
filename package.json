@@ -1,6 +1,6 @@
 {
   "name": "hook.jepso-ci.com",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The GitHub hook for jepso-ci job creation",
   "scripts": {
     "test": "mocha -R spec",
