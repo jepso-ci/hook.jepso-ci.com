@@ -12,7 +12,7 @@ body, html {
 #color-bar {
   background: #c00080;
   height: 20px;
-  margin 0px;
+  margin: 0px;
 }
 #test-result.pass, #test-result.fail, #test-result.pending {
   -webkit-border-radius: 4px;
