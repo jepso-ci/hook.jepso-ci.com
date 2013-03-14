@@ -1,5 +1,7 @@
 # hook.jepso-ci.com
 
+[![Dependency Status](https://gemnasium.com/jepso-ci/hook.jepso-ci.com.png)](https://gemnasium.com/jepso-ci/hook.jepso-ci.com)
+
   The GitHub hook for jepso-ci job creation.  Also includes documentation, a form to manually submit builds and a table to view builds being queued (and errors).
 
 ## Queued Messages
