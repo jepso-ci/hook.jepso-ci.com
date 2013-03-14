@@ -11,7 +11,7 @@
   "dependencies": {
     "express": "~3.1",
     "socket.io": "~0.9",
-    "browserify": "~2.4",
+    "browserify": "~2.6",
     "request": "~2.16",
     "jepso-ci-config": "~2.0",
     "q": "~0.9",
