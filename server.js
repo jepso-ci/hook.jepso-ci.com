@@ -2,6 +2,7 @@ var join = require('path').join;
 var Q = require('q');
 var getHead = Q.nfbind(require('request').head);
 var loadConfig = require('jepso-ci-config').loadRemote;
+var browserify = require('browserify-middleware');
 var queueBuild = require('./lib/queue-build');
 
 var express = require('express');
@@ -23,7 +24,7 @@ function checkConfig(user, repo, tag) {
     })
 }
 
-app.use(require('./lib/bundle-client').serve);
+app.use('/client.js', browserify('./lib/client.js'));
 app.use(express.favicon(join(__dirname, 'public', 'favicon.ico')));
 app.use(express.static(join(__dirname, 'public')));
 app.use(express.bodyParser());
