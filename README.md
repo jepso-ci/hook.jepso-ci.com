@@ -25,8 +25,8 @@
 {
   user: 'user',
   repo: 'repo',
-  buildID: buildID
+  currentBuild: buildID
 }
 ```
 
-  N.B. buildID is a number here, but a string in the queued message.  Each queued message is guaranteed to have a unique buildID.
+  N.B. currentBuild is a number here, but buildID is a string in the queued message.  Each queued message is guaranteed to have a unique buildID.
