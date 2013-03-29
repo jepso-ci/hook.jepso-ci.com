@@ -1,3 +1,4 @@
+var ms = require('ms');
 var join = require('path').join;
 var Q = require('q');
 var getHead = Q.nfbind(require('request').head);
@@ -24,11 +25,29 @@ function checkConfig(user, repo, tag) {
     })
 }
 
-app.use('/client.js', browserify('./lib/client.js'));
+var version = require('./package.json').version;
+
 app.use(express.favicon(join(__dirname, 'public', 'favicon.ico')));
-app.use(express.static(join(__dirname, 'public')));
+
+browserify.settings.production('cache', '365 days');
+app.use('/' + version + '/client.js', browserify('./lib/client.js'));
+
+
+app.use('/' + version, express.static(join(__dirname, 'public'), {
+  maxAge: process.env.NODE_ENV === 'production' ? ms('365 days') : 0
+}));
 app.use(express.bodyParser());
 
+if (process.env.NODE_ENV === 'production') {
+  var home = require('rfile')('./index.html').replace(/\{\{version\}\}/g, version);
+  app.get('/', function (req, res) {
+    res.send(home);
+  });
+} else {
+  app.get('/', function (req, res) {
+    res.send(require('rfile')('./index.html').replace(/\{\{version\}\}/g, version));
+  });
+}
 
 var messages = [];
 app.get('/messages', function (req, res) {

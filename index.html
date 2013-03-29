@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>JEPSO CI HOOK</title>
-    <link href="/style.css" rel="stylesheet" />
+    <link href="/{{version}}/style.css" rel="stylesheet" />
   </head>
   <body>
     <div id="color-bar"></div>
@@ -21,7 +21,7 @@
       <div id="test-result"></div>
       <h2>Automaticaly Queue Tests</h2>
       <p>You can set up GitHub with this url as a post-receive hook and JEPSO-CI will automatically re-test your library every time you push changes. To do this, go to your GitHub page and click on settings, you then need to add <code>https://hook.jepso-ci.com</code> as a WebHook URL.  It should then look like:</p>
-      <img src="/hook-setup.png" width="944px" height="419" style="border: #C00080; border-style: solid;" />
+      <img src="/{{version}}/hook-setup.png" width="944px" height="419" style="border: #C00080; border-style: solid;" />
       <h2>Queued Tests</h2>
       <p>This table will be populated with repositories being queued as they arrive in real time.</p>
       <table class="table table-bordered table-hover table-condensed table-striped" style="width: 800px">
@@ -39,6 +39,6 @@
       </table>
     </div>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="client.js"></script>
+    <script src="/{{version}}/client.js"></script>
   </body>
 </html>
