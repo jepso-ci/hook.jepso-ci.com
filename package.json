@@ -15,10 +15,10 @@
     "jepso-ci-config": "~2.0",
     "q": "~0.9",
     "simple-queue-service": "~1.0.1",
-    "aws-sdk": "0.9.7-pre.8",
     "browserify-middleware": "~1.4.0",
     "rfile": "~1.0.0",
-    "ms": "~0.6.0"
+    "ms": "~0.6.0",
+    "mongojs": "~0.7.3"
   },
   "domains": [
     "hook.jepso-ci.com"
